@@ -1,0 +1,20 @@
+---
+- name: debian | Adding GoCD Repo Key
+  apt_key:
+    url: "{{ gocd_repo_key }}"
+    state: present
+  become: true
+
+- name: debian | Adding GoCD Repo
+  apt_repository:
+    repo: "{{ gocd_repo }}"
+    state: present
+  become: true
+
+- name: debian | Installing GoCD Pre-Reqs
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items:
+  - default-jre-headless

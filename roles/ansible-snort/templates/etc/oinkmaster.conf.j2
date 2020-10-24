@@ -1,0 +1,9 @@
+{{ ansible_managed|comment }}
+
+url= {{ snort_oinkmaster_rules_url }}
+path = /bin:/usr/bin:/usr/local/bin
+update_files = \.rules$|\.config$|\.conf$|\.txt$|\.map$
+
+skipfile local.rules
+skipfile deleted.rules
+skipfile snort.conf

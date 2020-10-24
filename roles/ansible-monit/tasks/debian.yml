@@ -1,0 +1,6 @@
+---
+- name: debian | Installing Monit
+  apt:
+    name: "monit"
+    state: "present"
+  become: true

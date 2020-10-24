@@ -1,0 +1,6 @@
+---
+# tasks file for ansible-zookeeper
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: config_zookeeper.yml

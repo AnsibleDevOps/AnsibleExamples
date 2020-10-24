@@ -1,0 +1,32 @@
+---
+# tasks file for ansible-jenkins
+- include: set_facts.yml
+  tags:
+    - jenkins_plugins
+
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: python_modules.yml
+
+- include: users.yml
+  tags:
+    - jenkins_users
+
+- include: config_jenkins.yml
+  when: config_jenkins
+  tags:
+    - jenkins_config
+
+- include: plugins.yml
+  when: jenkins_manage_plugins
+  tags:
+    - jenkins_plugins
+
+- include: finalize.yml
+  when: >
+        (jenkins_config_info['use_security'] is defined and
+        jenkins_config_info['use_security'])

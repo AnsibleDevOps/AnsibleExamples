@@ -1,0 +1,71 @@
+---
+- name: debian | installing pre-reqs
+  apt:
+    name:
+      ["apt-transport-https", "python-mysqldb", "software-properties-common"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+
+- name: debian | adding mariadb repo keys
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "0xcbcb082a1bb943db"
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: >
+    mariadb_mysql_enable_mariadb_repo and
+    (ansible_distribution_release|lower == "trusty" or
+    ansible_distribution_release|lower == "jessie")
+
+- name: debian | adding mariadb repo keys
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: "0xF1656F24C74CD1D8"
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: >
+    mariadb_mysql_enable_mariadb_repo and
+    ansible_distribution_release|lower != "trusty" and
+    ansible_distribution_release|lower != "jessie"
+
+- name: debian | adding mariadb repo
+  apt_repository:
+    repo: "{{ mariadb_mysql_debian_repo }}"
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: mariadb_mysql_enable_mariadb_repo
+
+- include: mysql_root_pw.yml
+
+- name: debian | installing mariadb mysql
+  apt:
+    name: mariadb-server
+    state: present
+  become: true
+  register: result
+  until: result is successful
+
+- name: debian | configuring mariadb mysql
+  template:
+    src: etc/mysql/my.cnf.j2
+    dest: /etc/mysql/my.cnf
+  become: true
+  notify: restart mysql
+
+- name: debian | configuring client configuration
+  template:
+    src: etc/mysql/conf.d/client.cnf.j2
+    dest: /etc/mysql/conf.d/client.cnf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: restart mysql

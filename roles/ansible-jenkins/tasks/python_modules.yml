@@ -1,0 +1,10 @@
+---
+- name: python_modules | Installing tower-cli
+  pip:
+    name: ansible-tower-cli
+    state: present
+  become: true
+  ignore_errors: true
+  when: >
+        install_tower_cli is defined and
+        install_tower_cli

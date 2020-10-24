@@ -1,0 +1,10 @@
+---
+# tasks file for ansible-bind
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: config_bind.yml
+  when: bind_config
+
+- include: manage_zones.yml
+  when: bind_manage_zones

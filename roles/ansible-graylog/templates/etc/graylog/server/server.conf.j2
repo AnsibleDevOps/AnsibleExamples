@@ -1,0 +1,46 @@
+{{ ansible_managed|comment }}
+
+allow_highlighting = false
+allow_leading_wildcard_searches = false
+content_packs_auto_load = grok-patterns.json
+elasticsearch_analyzer = standard
+elasticsearch_cluster_name = {{ graylog_es_cluster_name }}
+elasticsearch_discovery_zen_ping_multicast_enabled = false
+elasticsearch_discovery_zen_ping_unicast_hosts = {% for host in graylog_es_discovery_zen_ping_unicast_hosts -%}{{ host }}:9300
+{%- if not loop.last %},{% endif -%}
+{%- endfor %}
+
+elasticsearch_index_prefix = graylog
+elasticsearch_max_docs_per_index = 20000000
+elasticsearch_max_number_of_indices = 20
+elasticsearch_network_host = {{ graylog_es_network_host }}
+elasticsearch_replicas = {{ graylog_es_replicas }}
+elasticsearch_shards = {{ graylog_es_shards }}
+http_bind_address = {{ graylog_http_bind_address }}
+inputbuffer_processors = 2
+inputbuffer_ring_size = 65536
+inputbuffer_wait_strategy = blocking
+is_master = {{ graylog_server_master|lower }}
+lb_recognition_period_seconds = 3
+mongodb_max_connections = 1000
+mongodb_threads_allowed_to_block_multiplier = 5
+mongodb_uri = {{ graylog_mongodb_uri }}
+node_id_file = /etc/graylog/server/node-id
+output_batch_size = 500
+output_fault_count_threshold = 5
+output_fault_penalty_seconds = 30
+output_flush_interval = 1
+outputbuffer_processors = 3
+password_secret = {{ graylog_server_password_secret }}
+plugin_dir = plugin
+processbuffer_processors = 5
+processor_wait_strategy = blocking
+proxied_requests_thread_pool_size = 32
+retention_strategy = delete
+ring_size = 65536
+root_password_sha2 = {{ graylog_server_root_password }}
+rotation_strategy = count
+{% if graylog_message_journal_enabled %}
+message_journal_enabled = true
+message_journal_dir = {{ graylog_message_journal_dir }}
+{% endif %}

@@ -1,0 +1,14 @@
+{{ ansible_managed|comment }}
+
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir={{ zookeeper_data_dir }}
+
+clientPort={{ zookeeper_client_port }}
+
+{% if groups[zookeeper_group] is defined %}
+{%   for host in groups[zookeeper_group] %}
+server.{{ loop.index }}={{ hostvars[host]['ansible_' + zookeeper_listen_interface]['ipv4']['address'] }}:2888:3888
+{%   endfor %}
+{% endif %}

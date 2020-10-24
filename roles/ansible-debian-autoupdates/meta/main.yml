@@ -1,0 +1,26 @@
+galaxy_info:
+  author: Larry Smith Jr.
+  description: An Ansible role to install/configure unattended-upgrades for Debian based systems.
+
+  license: license (MIT)
+
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - precise
+    - trusty
+    - utopic
+    - vivid
+    - wily
+    - xenial
+  - name: Debian
+    versions:
+    - jessie
+    - wheezy
+
+  galaxy_tags:
+    - system
+    - security
+dependencies: []

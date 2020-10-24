@@ -1,0 +1,24 @@
+---
+- name: quagga_config | ensuring vlan package is installed
+  apt:
+    name: "vlan"
+    state: "present"
+
+- name: quagga_config | configuring network settings
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: "present"
+    reload: yes
+  with_items: '{{ quagga_sysctl_network_settings }}'
+  when: quagga_sysctl_network_settings is defined
+
+- name: quagga_config | Configuring Quagga
+  template:
+    src: "etc/quagga/{{ item.name }}.j2"
+    dest: "{{ quagga_root_dir }}/{{ item.name }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: '{{ item.mode }}'
+  notify: "restart quagga"
+  with_items: '{{ quagga_configs }}'

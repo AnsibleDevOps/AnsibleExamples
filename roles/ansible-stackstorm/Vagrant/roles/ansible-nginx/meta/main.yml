@@ -1,0 +1,28 @@
+---
+galaxy_info:
+  author: Larry Smith Jr.
+  description: An [Ansible] role to install/configure [NGINX]
+
+  license: MIT
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: EL
+    versions:
+    - 6
+    - 7
+  - name: Ubuntu
+    versions:
+    - precise
+    - trusty
+    - xenial
+    - zesty
+  - name: Debian
+    versions:
+    - jessie
+    - wheezy
+
+  categories:
+  - web
+
+dependencies: []

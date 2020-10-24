@@ -1,0 +1,8 @@
+---
+- name: plugins | Managing Grafana Plugins
+  grafana_plugin:
+    name: "{{ item['name'] }}"
+    version: "{{ item['version']|default(omit) }}"
+    state: "{{ item['state'] }}"
+  become: true
+  with_items: "{{ grafana_plugins }}"

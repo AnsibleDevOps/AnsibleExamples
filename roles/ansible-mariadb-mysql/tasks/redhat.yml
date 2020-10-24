@@ -1,0 +1,30 @@
+---
+- name: redhat | adding mariadb repo
+  template:
+    src: etc/yum.repos.d/MariaDB.repo.j2
+    dest: /etc/yum.repos.d/MariaDB.repo
+    owner: root
+    group: root
+  become: true
+  register: repo_added
+
+- name: redhat | installing mariadb mysql
+  yum:
+    name: ["MariaDB-server", "MySQL-python"]
+    state: present
+    update_cache: true
+  become: true
+  register: result
+  until: result is successful
+  when: >
+    ansible_distribution != "Fedora"
+
+- name: redhat | installing mariadb mysql
+  dnf:
+    name: ["mariadb-server", "MySQL-python"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: >
+    ansible_distribution == "Fedora"

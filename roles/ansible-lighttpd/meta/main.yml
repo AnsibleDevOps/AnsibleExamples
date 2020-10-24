@@ -1,0 +1,29 @@
+---
+galaxy_info:
+  author: Larry Smith Jr.
+  description: Installs and configures lighttpd web server (https://www.lighttpd.net/)
+  license: MIT
+
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+    - name: Fedora
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - bionic
+        - precise
+        - trusty
+    - name: Debian
+      versions:
+        - jessie
+        - stretch
+
+  galaxy_tags:
+    - web
+
+dependencies: []

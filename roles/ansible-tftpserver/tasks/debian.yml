@@ -1,0 +1,5 @@
+---
+- name: debian | Installing Apache2
+  apt:
+    name: "apache2"
+    state: "present"

@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: Larry Smith Jr.
+  description: An [Ansible](https://www.ansible.com) role to install/configure [monit](https://mmonit.com/monit/)
+  license: MIT
+  min_ansible_version: 1.2
+  platforms:
+  - name: Ubuntu
+    versions:
+      - precise
+      - trusty
+      - xenial
+  - name: Debian
+    versions:
+      - jessie
+      - wheezy
+  categories:
+  - monitoring
+  - system
+dependencies: []

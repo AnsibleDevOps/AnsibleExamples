@@ -1,0 +1,12 @@
+---
+- name: centos | installing Kernel Devel
+  yum: name=kernel-devel-{{ ansible_kernel }} state=latest
+
+- name: centos | adding sysdig repo key
+  rpm_key: key={{ sysdig_repokey }} state=present
+
+- name: centos | adding sysdig repo
+  get_url: url={{ sysdig_url }} dest={{ sysdig_repo }} owner=root group=root mode=0644
+
+- name: centos | installing sysdig
+  yum: name=sysdig state=latest

@@ -1,0 +1,52 @@
+---
+- name: debian | Installing Packages
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  become: true
+  with_items:
+    - 'cluster-glue'
+    - 'corosync'
+    - 'crmsh'
+    - 'fence-agents'
+    - 'pacemaker'
+    - 'pcs'
+    - 'resource-agents'
+
+- name: debian | Checking If {{ corosync_authkey_file }} Exists
+  stat:
+    path: "{{ corosync_authkey_file }}"
+  register: "_corosync_authkey"
+
+- name: debian | Installing haveged On {{ pacemaker_primary_server }}
+  apt:
+    name: "haveged"
+    state: "present"
+  become: true
+  when: >
+        not _corosync_authkey['stat']['exists'] and
+        (inventory_hostname == pacemaker_primary_server)
+
+- name: debian | Generating corosync authkey On {{ pacemaker_primary_server }}
+  command: corosync-keygen
+  become: true
+  register: "_corosync_auth_key_generated"
+  when: >
+        not _corosync_authkey['stat']['exists'] and
+        (inventory_hostname == pacemaker_primary_server)
+
+- name: debian | Uninstalling haveged On {{ pacemaker_primary_server }}
+  apt:
+    name: "haveged"
+    purge: true
+    state: "absent"
+  become: true
+  when: >
+        _corosync_auth_key_generated['changed'] and
+        (inventory_hostname == pacemaker_primary_server)
+
+- name: debian | Ensuring /etc/corosync/uidgid.d Folder Exists
+  file:
+    path: "/etc/corosync/uidgid.d"
+    state: "directory"
+  become: true

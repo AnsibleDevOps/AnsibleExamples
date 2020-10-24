@@ -1,0 +1,21 @@
+---
+- name: debian | install plex dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - libavahi-common3
+    - libavahi-core7
+    - libdaemon0
+    - libnss-mdns
+    - libavahi-client3
+    - libavahi-common3
+    - avahi-daemon
+    - avahi-utils
+    - cifs-utils
+
+- name: debian | Installing Plex
+  apt:
+    deb: "{{ plex_deb_url }}"
+    state: present
+    force: yes

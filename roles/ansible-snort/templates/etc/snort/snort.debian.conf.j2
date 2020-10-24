@@ -1,0 +1,33 @@
+{{ ansible_managed|comment }}
+
+{% if snort_startup is defined %}
+DEBIAN_SNORT_STARTUP="{{ snort_startup }}"
+{% elif snort_startup is not defined %}
+DEBIAN_SNORT_STARTUP="boot"
+{% endif %}
+{% if snort_home_net is defined %}
+DEBIAN_SNORT_HOME_NET="{{ snort_home_net }}"
+{% elif snort_home_net is not defined %}
+DEBIAN_SNORT_HOME_NET="192.168.0.0/16"
+{% endif %}
+{% if snort_options is defined %}
+DEBIAN_SNORT_OPTIONS="{{ snort_options }}"
+{% elif snort_options is not defined %}
+DEBIAN_SNORT_OPTIONS=""
+{% endif %}
+{% if snort_interface is defined %}
+DEBIAN_SNORT_INTERFACE="{{ snort_interface }}"
+{% elif snort_interface is not defined %}
+DEBIAN_SNORT_INTERFACE="eth0"
+{% endif %}
+{% if (snort_send_stats is defined and snort_send_stats) or snort_send_stats is not defined %}
+DEBIAN_SNORT_SEND_STATS="true"
+{% elif snort_send_stats is defined and not snort_send_stats %}
+DEBIAN_SNORT_SEND_STATS="false"
+{% endif %}
+DEBIAN_SNORT_STATS_RCPT="root"
+{% if snort_stats_threshold is defined %}
+DEBIAN_SNORT_STATS_THRESHOLD="{{ snort_stats_threshold }}"
+{% elif snort_stats_threshold is not defined %}
+DEBIAN_SNORT_STATS_THRESHOLD="1"
+{% endif %}

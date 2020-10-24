@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: Larry Smith jr.
+  description: An [Ansible] role to install various [Hashicorp] utilities
+  license: license (GPLv2, CC-BY, etc)
+  min_ansible_version: 1.2
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - precise
+        - trusty
+        - xenial
+    - name: Debian
+      versions:
+        - jessie
+        - stretch
+
+  categories:
+    - development
+dependencies: []

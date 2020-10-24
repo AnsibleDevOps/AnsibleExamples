@@ -1,0 +1,9 @@
+---
+config_dnsmasq: false
+dnsmasq_misc_backup_dir: ''
+dnsmasq_misc_home: ''
+enable_dhcp: false
+enable_dhcp_tftp: false
+enable_firewall: false
+enable_tftp: false
+sync_dnsmasq: false

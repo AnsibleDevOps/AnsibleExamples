@@ -1,0 +1,46 @@
+---
+- name: install | Downloading Guacamole Server Package
+  get_url:
+    url: "{{ guacamole_dl_url + '/source/' + guacamole_server_package }}"
+    dest: "{{ guacamole_src_dir }}"
+  become: true
+
+- name: install | Extracting Guacamole Server Package
+  unarchive:
+    src: "{{ guacamole_src_dir + '/' + guacamole_server_package }}"
+    dest: "{{ guacamole_src_dir }}"
+    remote_src: true
+  become: true
+
+- name: install | Checking If Guacamole Server Is Installed
+  stat:
+    path: /usr/local/sbin/guacd
+  register: _guacamole_server_installed
+
+- name: install | Configuring Guacamole Server Build
+  command: ./configure --with-init-dir=/etc/init.d
+  args:
+    chdir: "{{ guacamole_src_dir + '/guacamole-server-' + guacamole_version }}"
+  become: true
+  register: _guacamole_config_server_build
+  when: not _guacamole_server_installed['stat']['exists']
+
+- name: install | Compiling Guacamole Server
+  make:
+    chdir: "{{ guacamole_src_dir + '/guacamole-server-' + guacamole_version }}"
+  become: true
+  register: _guacamole_server_compiled
+  when: _guacamole_config_server_build['changed']
+
+- name: install | Installing Guacamole Server
+  make:
+    chdir: "{{ guacamole_src_dir + '/guacamole-server-' + guacamole_version }}"
+    target: install
+  become: true
+  register: _guacamole_server_installed
+  when: _guacamole_server_compiled['changed']
+
+- name: install | Running ldconfig
+  command: ldconfig
+  become: true
+  when: _guacamole_server_installed['changed']

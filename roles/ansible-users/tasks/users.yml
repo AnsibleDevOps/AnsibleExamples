@@ -1,0 +1,39 @@
+---
+- name: users | Managing Users
+  user:
+    name: "{{ item['key'] }}"
+    password: "{{ item['value']['password'] }}"
+    shell: "{{ item['value']['shell']|default (omit) }}"
+    comment: "{{ item['value']['comment']|default (omit) }}"
+    generate_ssh_key: "{{ item['value']['generate_keys']|default (omit) }}"
+    system: "{{ item['value']['system_account']|default (omit) }}"
+    state: "{{ item['value']['state'] }}"
+  become: true
+  with_dict: "{{ users }}"
+
+- name: users | Adding Users To sudoers
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^{{ item['key'] }} ALL"
+    line: "{{ item['key'] }} ALL=(ALL) NOPASSWD:ALL"
+    validate: visudo -cf %s
+    state: present
+  become: true
+  with_dict: "{{ users }}"
+  when: >
+        item['value']['state'] == "present" and
+        item['value']['sudo']
+
+- name: users | Removing Users From sudoers
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^{{ item['key'] }} ALL"
+    line: "{{ item['key'] }} ALL=(ALL) NOPASSWD:ALL"
+    validate: visudo -cf %s
+    state: absent
+  become: true
+  with_dict: "{{ users }}"
+  when: >
+        (item['value']['state'] == "present" and
+        not item['value']['sudo']) or
+        item['value']['state'] == "absent"

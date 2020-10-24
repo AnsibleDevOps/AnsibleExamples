@@ -1,0 +1,48 @@
+---
+- name: config_snort | configuring snort
+  template:
+    src: etc/snort/snort.conf.j2
+    dest: /etc/snort/snort.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: restart snort
+  when: ansible_os_family == "Debian"
+
+- name: config_snort | configuring snort
+  template:
+    src: etc/snort/snort.conf.j2
+    dest: /etc/snort/snort.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: restart snortd
+  when: ansible_os_family == "RedHat"
+
+- name: config_snort | configuring snort
+  template:
+    src: etc/sysconfig/snort.j2
+    dest: /etc/sysconfig/snort
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: restart snortd
+  when: ansible_os_family == "RedHat"
+
+- name: config_snort | downloading snort commmunity rules
+  get_url:
+    url: "{{ snort_community_rules_url }}/{{ snort_community_rules_package }}"
+    dest: "/usr/local/src/{{ snort_community_rules_package }}"
+  become: true
+  when: ansible_os_family == "RedHat"
+
+- name: config_snort | extracting snort commmunity rules
+  unarchive:
+    src: "/usr/local/src/{{ snort_community_rules_package }}"
+    dest: "{{ snort_rule_path }}"
+    copy: false
+  become: true
+  when: ansible_os_family == "RedHat"

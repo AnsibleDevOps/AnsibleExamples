@@ -1,0 +1,36 @@
+---
+- name: redhat | installing epel repo (RedHat)
+  yum:
+    name: epel-release
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: ansible_distribution != "Fedora"
+
+- name: redhat | installing dependencies
+  yum:
+    name: ["python-devel", "python-pip"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: ansible_distribution != "Fedora"
+
+- name: redhat | installing add'l dependencies (Fedora)
+  dnf:
+    name: ["jq", "tree", "unzip"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: ansible_distribution == "Fedora"
+
+- name: redhat | installing add'l dependencies (Not Fedora)
+  yum:
+    name: ["jq", "tree", "unzip"]
+    state: present
+  become: true
+  register: result
+  until: result is successful
+  when: ansible_distribution != "Fedora"

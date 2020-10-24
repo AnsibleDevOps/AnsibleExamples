@@ -1,0 +1,15 @@
+{{ ansible_managed|comment }}
+
+INTERFACE={{ snort_interface }}
+CONF=/etc/snort/snort.conf
+USER=snort
+GROUP=snort
+PASS_FIRST=0
+LOGDIR=/var/log/snort
+ALERTMODE=fast
+DUMP_APP=1
+BINARY_LOG=1
+NO_PACKET_LOG=0
+PRINT_INTERFACE=0
+SYSLOG=/var/log/messages
+SECS=5

@@ -1,0 +1,58 @@
+smtpd_banner = $myhostname ESMTP $mail_name
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+
+# TLS parameters
+{% if postfix_use_tls is not defined %}
+smtpd_use_tls=yes
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+{% endif %}
+{% if postfix_use_tls %}
+smtpd_use_tls=yes
+smtpd_tls_cert_file={{ postfix_tls_cert_file }}
+smtpd_tls_key_file={{ postfix_tls_cert_key }}
+{% endif %}
+{% if not postfix_use_tls %}
+smtpd_use_tls=no
+{% endif %}
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = {{ansible_fqdn}}
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+mydestination = {{ansible_fqdn}}, localhost
+{% if postfix_relayhost is defined and enable_postfix_relayhost %}
+relayhost = {{postfix_relayhost}}
+{% endif %}
+{% if postfix_mynetworks is defined %}
+mynetworks = {{ postfix_mynetworks|join(' ') }}
+{% endif %}
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+{% if postfix_rewrite_domain is defined and enable_postfix_domain_rewrite %}
+mydomain = {{postfix_rewrite_domain}}
+{% endif %}
+{% if enable_postfix_domain_rewrite %}
+smtp_generic_maps = {{ postfix_domain_rewrite_filetype }}:{{ postfix_conf_dir }}/generic
+{% endif %}
+{% if enable_sender_canonical %}
+sender_canonical_maps = regexp:{{ postfix_conf_dir }}/canonical
+{% endif %}
+{% if enable_postifx_dkim %}
+smtpd_milters           = inet:127.0.0.1:8891
+non_smtpd_milters       = $smtpd_milters
+milter_default_action   = accept
+milter_protocol         = 2
+{% endif %}
+{% if enable_smtp_helo_name %}
+smtp_helo_name = {{ postfix_smtp_helo_name }}
+{% endif %}
+{% if enable_always_add_missing_headers %}
+always_add_missing_headers = yes
+{% endif %}

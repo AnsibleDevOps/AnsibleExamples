@@ -1,0 +1,31 @@
+---
+enable_firewall: false
+es_config_lvm: false
+es_config_nfs: false
+
+# NFS mount info
+es_nfs_mount: ''
+es_nfs_mount_opts: defaults
+es_nfs_mountpoint: ''
+
+# Elasticsearch
+es_fqdn: localhost
+es_port: 9200
+es_version: 1.7
+
+## Plugins
+# Curator tool
+es_curator_close_after_days: 14
+es_curator_max_keep_days: 30
+install_curator: true
+# Head plugin
+install_head: true
+# ElasticHQ plugin
+install_eshq: true
+# Marvel plugin
+install_marvel: true
+# Bigdesk plugin
+install_bigdesk: true
+
+# Cluster specific settings
+es_cluster_name: ansible-test #Default es_cluster_name if not specified in group_vars

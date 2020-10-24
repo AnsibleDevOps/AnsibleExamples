@@ -1,0 +1,28 @@
+---
+- name: config_packetbeat | configuring packetbeat
+  template:
+    src: etc/packetbeat/packetbeat.yml.j2
+    dest: "{{ es_packetbeat['config_dir'] }}/packetbeat.yml"
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify:
+    - restart packetbeat
+
+- name: config_packetbeat | Checking If Packetbeat Dashboards Have Been Loaded
+  stat:
+    path: "{{ es_packetbeat['config_dir'] }}/.dashboards_imported"
+  register: _es_packetbeat_dashboards
+
+- name: config_packetbeat | Loading Packetbeat Dashboards
+  command: "{{ es_packetbeat['home_dir'] }}/scripts/import_dashboards -es {{ es_packetbeat['elasticsearch_host'] }}"
+  register: _es_packetbeat_dashboards_loaded
+  when: not _es_packetbeat_dashboards['stat']['exists']
+
+- name: config_packetbeat | Marking Packetbeat Dashboards As Loaded
+  file:
+    path: "{{ es_packetbeat['config_dir'] }}/.dashboards_imported"
+    state: touch
+  become: true
+  when: _es_packetbeat_dashboards_loaded['changed']

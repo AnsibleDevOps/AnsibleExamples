@@ -1,0 +1,27 @@
+---
+galaxy_info:
+  author: Larry Smith Jr.
+  description: An `Ansible` role to install/configure `PowerDNS DNSDist`
+
+  license: license (GPLv2, CC-BY, etc)
+
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - trusty
+        - xenial
+    - name: Debian
+      versions:
+        - jessie
+    - name: EL
+      versions:
+        - 7
+
+  galaxy_tags:
+    - networking
+    - system
+
+dependencies: []

@@ -1,0 +1,15 @@
+---
+- name: opensuse | Installing DNSMasq
+  zypper:
+    name: dnsmasq
+    state: present
+  become: true
+  register: result
+  until: result is successful
+
+- name: opensuse | Ensuring DNSMasq Service Is Enabled and Started
+  service:
+    name: dnsmasq
+    state: started
+    enabled: true
+  become: true

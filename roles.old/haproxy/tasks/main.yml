@@ -1,0 +1,17 @@
+---
+# Open firewall ports
+- include: ferm.yml
+  tags: [ferm]
+  when: enable_firewall
+
+- include: debian.yml
+  tags: [haproxy]
+  when: ansible_os_family == "Debian"
+
+- include: centos.yml
+  tags: [haproxy]
+  when: ansible_os_family == "RedHat"
+
+- include: config_haproxy.yml
+  tags: [haproxy]
+  when: config_haproxy

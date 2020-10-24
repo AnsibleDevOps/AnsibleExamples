@@ -1,0 +1,6 @@
+---
+- name: debian | Installing tftpd-hpa
+  apt:
+    name: tftpd-hpa
+    state: present
+  become: true

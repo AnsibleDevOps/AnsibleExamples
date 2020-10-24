@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+#
+{% if es_packetbeat_configuration is defined and es_packetbeat_configuration != [] %}
+{{ es_packetbeat_configuration|to_nice_yaml }}
+{% endif %}

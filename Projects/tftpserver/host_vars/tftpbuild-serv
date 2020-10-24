@@ -1,0 +1,5 @@
+---
+enable_firewall: false
+
+update_dhcpclient_conf: true
+config_eth1: false      # set to false to not configure eth1

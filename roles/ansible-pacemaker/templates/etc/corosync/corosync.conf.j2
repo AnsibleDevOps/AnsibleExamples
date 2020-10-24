@@ -1,0 +1,51 @@
+totem {
+	version: 2
+	cluster_name: {{ corosync_cluster_name }}
+	token: 3000
+	token_retransmits_before_loss_const: 10
+	clear_node_high_bit: yes
+	crypto_cipher: none
+	crypto_hash: none
+	interface {
+		ringnumber: 0
+		bindnetaddr: {{ corosync_bindnet_addr }}
+		mcastport: {{ corosync_mcastport }}
+		ttl: 1
+	}
+{% if corosync_unicast_mode %}
+	nodelist{
+{% for host in groups[pacemaker_cluster_group] %}
+		node {
+			ring0_addr: {{ hostvars[host]['corosync_bindnet_addr'] }}
+			name: {{ host }}
+			nodeid: {{ loop.index + 1 }}
+		}
+{% endfor %}
+	}
+{% endif %}
+}
+
+logging {
+	fileline: off
+	to_stderr: no
+	to_logfile: no
+	to_syslog: yes
+	syslog_facility: daemon
+	debug: off
+	timestamp: on
+	logger_subsys {
+		subsys: QUORUM
+		debug: off
+	}
+}
+
+quorum {
+	provider: corosync_votequorum
+	expected_votes: {{ corosync_expected_votes }}
+{% if corosync_wait_for_all is defined and corosync_wait_for_all %}
+	wait_for_all: 1
+{% endif %}
+{% if corosync_last_man_standing is defined and corosync_last_man_standing %}
+	last_man_standing: 1
+{% endif %}
+}

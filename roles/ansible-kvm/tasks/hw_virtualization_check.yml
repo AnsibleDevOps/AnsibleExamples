@@ -1,0 +1,18 @@
+---
+- name: hw_virtualization_check | checking if hardware virtualization is supported
+  command: egrep -c '(vmx|svm)' /proc/cpuinfo
+  register: hw_check
+  check_mode: no
+  changed_when: false
+  failed_when: false
+  become: true
+
+- name: hw_virtualization_check | Setting kvm_domain_type == qemu
+  set_fact:
+    kvm_domain_type: qemu
+  when: hw_check['stdout'] == '0'
+
+- name: hw_virtualization_check | Setting kvm_domain_type == kvm
+  set_fact:
+    kvm_domain_type: kvm
+  when: hw_check['stdout'] != '0'

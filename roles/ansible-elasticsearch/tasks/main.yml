@@ -1,0 +1,15 @@
+---
+# tasks file for ansible-elasticsearch
+
+- include: set_facts.yml
+
+- include_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include_tasks: redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- include_tasks: config.yml
+  when: elasticsearch['config']
+
+- include_tasks: service.yml

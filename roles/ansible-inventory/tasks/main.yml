@@ -1,0 +1,6 @@
+---
+- include: db_setup.yml
+  when: inventory_hostname == inventory_db_host
+
+- include: gather_details.yml
+  when: inventory_gather_details

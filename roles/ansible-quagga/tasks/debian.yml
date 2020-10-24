@@ -1,0 +1,46 @@
+---
+- name: debian | installing quagga pre-reqs
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - 'lldpd'
+    - 'vlan'
+
+- name: debian | Installing ifenslave
+  apt:
+    name: "ifenslave"
+    state: "present"
+  # when: >
+  #       ansible_distribution == "Ubuntu" and
+  #       ansible_distribution_version < '16.04'
+
+# Disabled as this causes issues
+# - name: debian | Installing ifupdown2
+#   apt:
+#     name: "ifupdown2"
+#     state: "present"
+#   when: >
+#         ansible_distribution == "Ubuntu" and
+#         ansible_distribution_version >= '16.04'
+
+- name: debian | installing quagga
+  apt:
+    name: "quagga"
+    state: "present"
+
+- name: debian | enabling quagga
+  service:
+    name: "quagga"
+    state: "started"
+    enabled: yes
+
+# Quagga vtysh shell (END) problem
+# http://www.brianlinkletter.com/quagga-vtysh-shell-end-problem/
+- name: debian | Fixing vtysh shell (END) problem
+  template:
+    src: "etc/{{ item }}.j2"
+    dest: "/etc/{{ item }}"
+  with_items:
+    - 'bash.bashrc'
+    - 'environment'

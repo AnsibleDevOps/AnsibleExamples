@@ -1,0 +1,7 @@
+---
+# tasks file for ansible-cassandra
+- include_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include_tasks: config.yml
+  when: cassandra['config']

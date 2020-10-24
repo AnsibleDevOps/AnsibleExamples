@@ -1,0 +1,9 @@
+---
+# defaults file for ansible-windows-domain
+
+windows_domain_info:
+  dns_domain_name: vagrant.local
+  safe_mode_password: Vagrant@123!
+
+reboot_timer: 3600
+shutdown_timer: "{{ reboot_timer }}"

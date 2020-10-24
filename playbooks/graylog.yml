@@ -1,0 +1,16 @@
+---
+- hosts: graylog-servers
+  remote_user: remote
+  sudo: yes
+  roles:
+    - role: ansible-base
+    - role: ansible-collectd
+    - role: ansible-snmpd
+      when: enable_snmpd
+    - role: ansible-timezone
+      when: change_timezone
+    - role: ansible-zabbix-agent
+      when: enable_zabbix_monitoring
+    - role: ansible-elasticsearch
+    - role: ansible-mongodb
+    - role: ansible-graylog

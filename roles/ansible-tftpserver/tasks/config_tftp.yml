@@ -1,0 +1,88 @@
+---
+- name: config_tftp | Ensuring {{ tftpserver_tftpboot_dir }} Exists
+  file:
+    path: "{{ tftpserver_tftpboot_dir }}"
+    state: "directory"
+
+- name: config_tftp | Downloading Netboot
+  get_url:
+    url: "{{ tftpserver_netboot_url }}/{{ tftpserver_netboot_file }}"
+    dest: "{{ tftpserver_tftpboot_dir }}/{{ tftpserver_netboot_file }}"
+
+- name: config_tftp | Extracting Netboot
+  unarchive:
+    src: "{{ tftpserver_tftpboot_dir }}/{{ tftpserver_netboot_file }}"
+    dest: "{{ tftpserver_tftpboot_dir }}"
+    copy: no
+  args:
+    creates: "{{ tftpserver_tftpboot_dir }}/pxelinux.0"
+
+- name: config_tftp | Configuring grub.cfg
+  template:
+    src: "var/lib/tftpboot/grub.cfg.j2"
+    dest: "{{ tftpserver_tftpboot_dir }}/grub.cfg"
+    owner: "nobody"
+    group: "nogroup"
+
+- name: config_tftp | Generating Additional Distro Preseed Files
+  template:
+    src: "var/lib/tftpboot/preseed.cfg.j2"
+    dest: "{{ tftpserver_tftpboot_dir }}/{{ item.distro }}_{{ item.version }}_preseed.cfg"
+    owner: "nobody"
+    group: "nogroup"
+  with_items: '{{ tftpserver_preseed_files }}'
+
+- name: config_tftp | Configuring txt.cfg
+  template:
+    src: "var/lib/tftpboot/ubuntu-installer/amd64/boot-screens/txt.cfg.j2"
+    dest: "{{ tftpserver_tftpboot_dir }}/ubuntu-installer/amd64/boot-screens/txt.cfg"
+    owner: "nobody"
+    group: "nogroup"
+  notify: "restart dnsmasq"
+
+- name: config_tftp | Configuring menu.cfg
+  template:
+    src: "var/lib/tftpboot/ubuntu-installer/amd64/boot-screens/menu.cfg.j2"
+    dest: "{{ tftpserver_tftpboot_dir }}/ubuntu-installer/amd64/boot-screens/menu.cfg"
+    owner: "nobody"
+    group: "nogroup"
+
+- name: config_tftp | Configuring prompt.cfg
+  template:
+    src: "var/lib/tftpboot/ubuntu-installer/amd64/boot-screens/prompt.cfg.j2"
+    dest: "{{ tftpserver_tftpboot_dir }}/ubuntu-installer/amd64/boot-screens/prompt.cfg"
+    owner: "nobody"
+    group: "nogroup"
+
+- name: config_tftp | Configuring syslinux.cfg
+  template:
+    src: "var/lib/tftpboot/ubuntu-installer/amd64/boot-screens/syslinux.cfg.j2"
+    dest: "{{ tftpserver_tftpboot_dir }}/ubuntu-installer/amd64/boot-screens/syslinux.cfg"
+    owner: "nobody"
+    group: "nogroup"
+
+- name: config_tftp | Unmounting ISO Images
+  mount:
+    name: "{{ tftpserver_tftpboot_dir }}/images/{{ item.folder }}"
+    src: "{{ tftpserver_tftpboot_dir }}/images/{{ item.file }}"
+    fstype: "iso9660"
+    state: "unmounted"
+  with_items: '{{ tftpserver_iso_images }}'
+  when: tftpserver_iso_images is defined
+
+- name: config_tftp | Unmounting VMware ISO Images
+  mount:
+    name: "{{ tftpserver_tftpboot_dir }}/images/{{ item.folder }}"
+    src: "{{ tftpserver_tftpboot_dir }}/images/{{ item.file }}"
+    fstype: "iso9660"
+    state: "unmounted"
+  with_items: '{{ tftpserver_vmware_iso_images }}'
+  when: tftpserver_vmware_iso_images is defined
+
+- name: config_tftp | Setting Folder Permissions on {{ tftpserver_tftpboot_dir }}
+  file:
+    path: "{{ tftpserver_tftpboot_dir }}"
+    state: "directory"
+    recurse: yes
+    owner: "nobody"
+    group: "nogroup"

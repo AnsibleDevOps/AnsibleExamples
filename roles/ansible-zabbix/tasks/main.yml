@@ -1,0 +1,19 @@
+---
+# tasks file for ansible-zabbix
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: configure_zabbix_server.yml
+
+- include: configure_zabbix_frontend.yml
+
+- include: change_mysql_root_pass.yml
+  when: >
+        zabbix_change_mysql_root_password
+
+- include: manage_mysql_db.yml
+
+- include: manage_zabbix.yml
+  when: >
+        zabbix_manage_hosts or
+        zabbix_manage_groups

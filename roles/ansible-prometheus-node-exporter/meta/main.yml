@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Larry Smith Jr.
+  description: An [Ansible] role to install/configure [Prometheus Node Exporter]
+  license: MIT
+
+  min_ansible_version: 1.2
+  platforms:
+    - name: Debian
+      versions:
+        - jessie
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+
+  galaxy_tags:
+    - monitoring
+dependencies: []

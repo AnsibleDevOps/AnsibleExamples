@@ -1,0 +1,7 @@
+---
+- name: redhat | Installing Pre-Reqs
+  yum:
+    name: "{{ netdata_redhat_pre_reqs }}"
+    state: present
+  become: true
+  when: ansible_distribution != "Fedora"

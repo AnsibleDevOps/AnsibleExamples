@@ -1,0 +1,20 @@
+galaxy_info:
+  author: Larry Smith Jr.
+  description: An Ansible role to install/configure Postgresql
+  license: MIT
+
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - trusty
+        - xenial
+    - name: Debian
+      versions:
+        - jessie
+
+  galaxy_tags:
+    - sql
+dependencies: []

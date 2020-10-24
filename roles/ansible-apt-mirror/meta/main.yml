@@ -1,0 +1,21 @@
+---
+galaxy_info:
+  author: Larry Smith Jr.
+  description: |
+              Installs and configures apt-mirror (Local APT Repository).
+              Also configures clients if extra-var passed.
+
+  license: license (MIT)
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - precise
+    - trusty
+    - xenial
+
+  categories:
+  - packaging
+  - system
+dependencies: []

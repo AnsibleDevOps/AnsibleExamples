@@ -1,0 +1,10 @@
+---
+- hosts: squid-servers
+  remote_user: remote
+  sudo: yes
+  roles:
+    - role: ansible-haproxy
+      when: enable_haproxy
+    - role: ansible-keepalived
+      when: enable_keepalived
+    - role: ansible-squid

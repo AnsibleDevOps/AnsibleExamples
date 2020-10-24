@@ -1,0 +1,8 @@
+---
+- name: debian | installing bind
+  apt:
+    name: ["bind9", "bind9utils", "bind9-doc"]
+    state: present
+  become: true
+  register: result
+  until: result is successful

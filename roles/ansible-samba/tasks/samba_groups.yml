@@ -1,0 +1,7 @@
+---
+- name: samba_groups | ensuring groups exist
+  group:
+    name: "{{ item }}"
+    state: present
+  become: true
+  with_items: "{{ samba_groups }}"

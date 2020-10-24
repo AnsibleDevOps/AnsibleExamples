@@ -1,0 +1,25 @@
+---
+- hosts: zabbix_server
+  vars:
+    apache2_config_php: true
+    apache2_install_php: true
+    apache2_php_max_execution_time: 300
+    apache2_php_max_input_time: 300
+    apache2_php_max_memory: 128M
+    apache2_php_post_max_size: 16M
+    php_debian_packages:
+      - 'php{{ php_version_debian }}-bcmath'
+      - 'php{{ php_version_debian }}-mbstring'
+      - 'php{{ php_version_debian }}-xmlreader'
+      - 'php{{ php_version_debian }}-xmlwriter'
+    pri_domain_name: 'test.vagrant.local'
+  roles:
+    - role: ansible-apache2
+      become: true
+    - role: ansible-php
+      become: true
+    - role: ansible-mysql
+    - role: ansible-zabbix
+      tags:
+        - zabbix
+  tasks:

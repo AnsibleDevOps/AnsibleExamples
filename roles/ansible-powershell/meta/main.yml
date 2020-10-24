@@ -1,0 +1,35 @@
+---
+galaxy_info:
+  author: Larry Smith Jr.
+  description: An Ansible role to install/configure Powershell
+
+  license: MIT
+
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: EL
+      versions:
+        - 7
+    - name: Debian
+      versions:
+        - jessie
+        - stretch
+    - name: Fedora
+      versions:
+        - 24
+        - 25
+        - 26
+        - 27
+        - 28
+        - 29
+    - name: Ubuntu
+      versions:
+        - bionic
+        - trusty
+        - xenial
+
+  galaxy_tags:
+    - system
+
+dependencies: []

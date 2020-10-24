@@ -1,0 +1,33 @@
+---
+- name: debian | installing pre-reqs
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  become: true
+  with_items: '{{ zabbix_debian_pre_req_packages }}'
+
+- name: debian | adding zabbix package
+  apt:
+    deb: "{{ zabbix_debian_repo_info['url'] }}/{{ zabbix_debian_repo_info['package'] }}"
+    state: "present"
+  become: true
+  register: "package_added"
+  when: >
+        ansible_distribution == "Debian" or
+        (ansible_distribution == "Ubuntu" and
+        ansible_distribution_version|version_compare('16.04', '<=', strict=true))
+
+- name: debian | updating apt-cache (If zabbix package added)
+  apt:
+    update_cache: true
+  become: true
+  when: package_added['changed']
+
+- name: debian | installing zabbix
+  apt:
+    name: "{{ item }}"
+    state: "latest"
+  become: true
+  with_items:
+    - 'zabbix-server-mysql'
+    - 'zabbix-frontend-php'

@@ -1,0 +1,7 @@
+---
+- hosts: zookeeper_cluster
+  vars:
+    pri_domain_name: test.vagrant.local
+  roles:
+    - role: ansible-openjdk
+    - role: ansible-zookeeper

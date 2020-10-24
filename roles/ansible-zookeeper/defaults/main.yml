@@ -1,0 +1,15 @@
+---
+# defaults file for ansible-zookeeper
+
+# the port at which the clients will connect
+zookeeper_client_port: 2181
+
+# the directory where the snapshot is stored.
+zookeeper_data_dir: /var/lib/zookeeper
+
+# Define Ansible inventory group which hosts are members of
+zookeeper_group: zookeeper_cluster
+
+# Defines the listen interface to obtain IP for cluster communications rather
+# than relying on hostname resolution.
+zookeeper_listen_interface: enp0s8

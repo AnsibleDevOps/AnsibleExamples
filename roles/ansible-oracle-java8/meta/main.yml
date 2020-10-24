@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: Larry Smith Jr.
+  description: Installs Oracle Java8
+  license: MIT
+
+  min_ansible_version: 1.2
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+    - name: Debian
+      versions:
+        - jessie
+
+  galaxy_tags:
+    - development
+    - system
+
+dependencies: []

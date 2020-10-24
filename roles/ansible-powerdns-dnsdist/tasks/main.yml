@@ -1,0 +1,15 @@
+---
+# tasks file for ansible-powerdns-dnsdist
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+- include: redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: config_dnsdist.yml
+  when: pdns_dnsdist_config
+
+- include: systemd_resolved.yml
+  when: >
+    ansible_service_mgr == "systemd" and
+    pdns_dnsdist_systemd_resolved_disable

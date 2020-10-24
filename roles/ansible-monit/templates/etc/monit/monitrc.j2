@@ -1,0 +1,60 @@
+set daemon {{ monit_daemon_check_interval }}
+{% if monit_alerts_to_syslog is defined and monit_alerts_to_syslog %}
+set logfile syslog facility log_daemon
+{% endif %}
+{% if (monit_alerts_to_syslog is defined and not monit_alerts_to_syslog)or monit_alerts_to_syslog is not defined %}
+set logfile {{ monit_logfile }}
+{% endif %}
+set idfile {{ monit_idfile }}
+set statefile {{ monit_statefile }}
+{% if monit_enable_email_notifications is defined and monit_enable_email_notifications %}
+set mailserver {{ monit_email_server }}
+
+set mail-format {
+   from: {{ monit_email_from }}
+   subject: monit alert -- $EVENT $SERVICE
+   message: $EVENT Service $SERVICE
+                 Date:        $DATE
+                 Action:      $ACTION
+                 Host:        $HOST
+                 Description: $DESCRIPTION
+
+            Your faithful employee,
+            Monit
+}
+set alert {{ monit_email_to }} not on { instance, action }
+{% endif %}
+set eventqueue
+    basedir /var/lib/monit/events
+    slots 100
+{% if monit_enable_web_server is defined and monit_enable_web_server %}
+set httpd port {{ monit_httpd_port }} and
+{%   if monit_web_server_local_only is defined and monit_web_server_local_only %}
+    use address localhost
+{%   endif %}
+{%   if monit_allow_web_users is defined %}
+{%     for item in monit_allow_web_users %}
+    allow {{ item }}
+{%     endfor %}
+{%   endif %}
+{%   if monit_web_server_allow_list is defined %}
+{%     for item in monit_web_server_allow_list %}
+    allow {{ item }}
+{%     endfor %}
+{%   endif %}
+{% endif %}
+check system {{ ansible_fqdn }}
+{% for item in monit_system_checks %}
+  if {{ item['resource'] }} {{ item['operator'] }} {{ item['value'] }} then {{ item['action'] }}
+{% endfor %}
+
+{% for item in monit_include_config_dirs %}
+include {{ item }}
+{% endfor %}
+
+{% if monit_filesystem_space_usage_checks is defined %}
+{%   for item in monit_filesystem_space_usage_checks %}
+check filesystem {{ item['name'] }} with path {{ item['path'] }}
+  if space usage {{ item['operator'] }} {{ item['unit'] }} then {{ item['action'] }}
+{%   endfor %}
+{% endif %}

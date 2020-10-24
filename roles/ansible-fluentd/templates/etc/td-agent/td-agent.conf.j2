@@ -1,0 +1,62 @@
+{% if fluentd_inputs is defined %}
+{%   for item in fluentd_inputs %}
+<source>
+  @type {{ item['type'] }}
+{% if item['port'] is defined %}
+  port {{ item['port'] }}
+{% endif %}
+{% if item['bind'] is defined %}
+  bind {{ item['bind'] }}
+{% endif %}
+{% if item['tag'] is defined %}
+  tag {{ item['tag'] }}
+{% endif %}
+{% if item['protocol_type'] is defined %}
+  protocol_type {{ item['protocol_type'] }}
+{% endif %}
+{% if item['path'] is defined %}
+  path {{ item['path'] }}
+{% endif %}
+{% if item['pos_file'] is defined %}
+  pos_file {{ item['pos_file'] }}
+{% endif %}
+{% if item['format'] is defined %}
+  format {{ item['format'] }}
+{% endif %}
+</source>
+{%   endfor %}
+{% endif %}
+
+{% if fluentd_ouputs is defined %}
+{%   for item in fluentd_ouputs %}
+<match {{ item['match'] }}>
+  @type {{ item['type'] }}
+{%     if item['type']|lower == 'elasticsearch' %}
+{%       if item['logstash_format'] is defined and item['logstash_format'] %}
+  logstash_format true
+{%       endif %}
+  host {{ item['host'] }}
+  port {{ item['port'] }}
+  index_name {{ item['index_name'] }}
+  type_name {{ item['type_name'] }}
+{%     endif %}
+{%     if item['type']|lower == 'rabbitmq' %}
+  host {{ item['host'] }}
+  user {{ item['user'] }}
+  pass {{ item['pass'] }}
+  vhost {{ item['vhost'] }}
+  format {{ item['format'] }}
+  exchange {{ item['exchange'] }}
+  exchange_type {{ item['exchange_type'] }}
+  exchange_durable {{ item['exchange_durable']|lower }}
+{%       if item['routing_key'] is defined %}
+  routing_key {{ item['routing_key'] }}
+{%       endif %}
+  heartbeat {{ item['heartbeat'] }}
+  <format>
+    @type {{ item['format'] }}
+  </format>
+{%     endif %}
+</match>
+{%   endfor %}
+{% endif %}

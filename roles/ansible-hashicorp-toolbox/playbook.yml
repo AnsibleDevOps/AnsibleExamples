@@ -1,0 +1,5 @@
+---
+- name: Installs Various HashiCorp apps/tools
+  hosts: all
+  roles:
+    - role: ansible-hashicorp-toolbox

@@ -1,0 +1,31 @@
+---
+- include: debian.yml
+  tags: [sensu]
+  when: ansible_os_family == "Debian"
+
+- include: centos.yml
+  tags: [sensu]
+  when: ansible_os_family == "RedHat"
+
+- include: config_server.yml
+  tags: [sensu]
+  when: sensu_server
+
+- include: config_plugins.yml
+  tags: [sensu]
+
+- include: config_checks.yml
+  tags: [sensu]
+
+- include: config_client.yml
+  tags: [sensu]
+  when: sensu_client
+
+- include: config_handlers.yml
+  tags: [sensu]
+  when: sensu_server and enable_handlers
+
+# Open firewall ports
+- include: ferm.yml
+  tags: [ferm]
+  when: enable_firewall
